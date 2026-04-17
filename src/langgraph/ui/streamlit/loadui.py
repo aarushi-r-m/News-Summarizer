@@ -9,17 +9,16 @@ class LoadStreamlitUI:
         self.user_control={}
         
     def load_streamlit_ui(self):
-        from dotenv import load_dotenv
-        load_dotenv()
         import os
+        from config import GROQ_API_KEY, TAVILY_API_KEY
         st.set_page_config(page_title= "🤖 "+ self.config.get_page_title(), layout="wide")
         st.header("🤖 " + self.config.get_page_title())
         st.session_state.timeFrame = ''
         st.session_state.IsFetchButtonClicked = False
 
-        # Load defaults from .env
-        default_groq = os.getenv("GROQ_API_KEY", "")
-        default_tavily = os.getenv("TAVILY_API_KEY", "")
+        # Load defaults from config.py
+        default_groq = GROQ_API_KEY
+        default_tavily = TAVILY_API_KEY
 
         with st.sidebar:
             llm_options = self.config.get_llm_options()

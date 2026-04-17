@@ -3,9 +3,9 @@ from langchain_core.prompts import ChatPromptTemplate
 
 class NewsSummarizerNode:
     def __init__(self, llm):
-        self.tavily  = TavilyClient()
+        from config import TAVILY_API_KEY
+        self.tavily  = TavilyClient(api_key=TAVILY_API_KEY)
         self.llm = llm
-        
         self.state = {}
     
     def fetch_news(self, state:dict) -> dict:

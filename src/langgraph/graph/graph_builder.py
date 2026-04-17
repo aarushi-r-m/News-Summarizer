@@ -48,18 +48,18 @@ class GraphBuilder:
         self.graph_builder.add_edge("tools", "chatbot")
         self.graph_builder.add_edge("chatbot", END)
 
-    def graph_for_news_summarizer(self):
+    def graph_for_news_summarizer(self, tavily_api_key):
         """
         Builds the graph for the "News Summarizer" use case.
         This function should construct a graph that represents the flow of fetching news articles,
         summarizing them using the LLM, and presenting the summaries to the user."""
-        newsNode = NewsSummarizerNode(self.llm)
-        
+        newsNode = NewsSummarizerNode(self.llm, tavily_api_key=tavily_api_key)
+
         #Added the nodes
         self.graph_builder.add_node("fetch_news", newsNode.fetch_news)
         self.graph_builder.add_node("summarize_news", newsNode.summarize_news)
         self.graph_builder.add_node("save_result", newsNode.save_result)
-        
+
         #Added the edges
         self.graph_builder.set_entry_point("fetch_news")
         self.graph_builder.add_edge("fetch_news", "summarize_news")
@@ -67,7 +67,7 @@ class GraphBuilder:
         self.graph_builder.add_edge("save_result", END)
         
         
-    def setup_graph(self, usecase: str):
+    def setup_graph(self, usecase: str, tavily_api_key=None):
         """
         Sets up the graph based on the selected use case.
         This function determines which use case is selected by the user and calls the appropriate
@@ -75,11 +75,13 @@ class GraphBuilder:
         if usecase == "Basic Chatbot":
             self.build_graph_for_chatbot()
             return self.graph_builder.compile()
-     
+
         if usecase == "Chatbot With Web":
             self.build_graph_for_chatbot_with_web()
             return self.graph_builder.compile()
-        
+
         if usecase == "AI News Summarizer":
-            self.graph_for_news_summarizer()
+            if not tavily_api_key:
+                raise ValueError("TAVILY_API_KEY must be provided by the user.")
+            self.graph_for_news_summarizer(tavily_api_key)
             return self.graph_builder.compile()

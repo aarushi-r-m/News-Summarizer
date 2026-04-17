@@ -2,9 +2,10 @@ from tavily import TavilyClient
 from langchain_core.prompts import ChatPromptTemplate
 
 class NewsSummarizerNode:
-    def __init__(self, llm):
-        from config import TAVILY_API_KEY
-        self.tavily  = TavilyClient(api_key=TAVILY_API_KEY)
+    def __init__(self, llm, tavily_api_key=None):
+        if tavily_api_key is None:
+            raise ValueError("TAVILY_API_KEY must be provided by the user.")
+        self.tavily  = TavilyClient(api_key=tavily_api_key)
         self.llm = llm
         self.state = {}
     

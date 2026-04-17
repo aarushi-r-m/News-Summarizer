@@ -37,7 +37,11 @@ def load_langgraph_app():
                 return
             graph_builder = GraphBuilder(model)
             try:
-                graph = graph_builder.setup_graph(usecase)
+                if usecase == "AI News Summarizer":
+                    tavily_api_key = user_input.get("TAVILY_API_KEY")
+                    graph = graph_builder.setup_graph(usecase, tavily_api_key=tavily_api_key)
+                else:
+                    graph = graph_builder.setup_graph(usecase)
                 DisplayResults(usecase, graph, user_message).display()
             except Exception as e:
                 st.error(f"Error setting up the graph: {e}")

@@ -10,15 +10,10 @@ class LoadStreamlitUI:
         
     def load_streamlit_ui(self):
         import os
-        from config import GROQ_API_KEY, TAVILY_API_KEY
         st.set_page_config(page_title= "🤖 "+ self.config.get_page_title(), layout="wide")
         st.header("🤖 " + self.config.get_page_title())
         st.session_state.timeFrame = ''
         st.session_state.IsFetchButtonClicked = False
-
-        # Load defaults from config.py
-        default_groq = GROQ_API_KEY
-        default_tavily = TAVILY_API_KEY
 
         with st.sidebar:
             llm_options = self.config.get_llm_options()
@@ -29,14 +24,14 @@ class LoadStreamlitUI:
             if self.user_control['llm_choice'] == "Groq":
                 model_options = self.config.get_groq_model_options()
                 self.user_control["selected_model"] = st.selectbox("Select Model", model_options)
-                self.user_control["GROQ_API_KEY"] = st.session_state["GROQ_API_KEY"] = st.text_input("Groq API Key", value=default_groq, type="password")
+                self.user_control["GROQ_API_KEY"] = st.session_state["GROQ_API_KEY"] = st.text_input("Groq API Key", value="", type="password")
                 if not self.user_control["GROQ_API_KEY"]:
                     st.warning("⚠️Please enter your Groq API Key to proceed. You can create one from https://groq.com/ to use the Groq LLM.")
 
             self.user_control['selected_usecase'] = st.selectbox("Select Use Case", usecase_options)
 
             if self.user_control['selected_usecase'] == "Chatbot With Web" or self.user_control['selected_usecase'] == "AI News Summarizer":
-                self.user_control["TAVILY_API_KEY"] = st.session_state["TAVILY_API_KEY"] = st.text_input("Tavily API Key", value=default_tavily, type="password")
+                self.user_control["TAVILY_API_KEY"] = st.session_state["TAVILY_API_KEY"] = st.text_input("Tavily API Key", value="", type="password")
                 os.environ["TAVILY_API_KEY"] = self.user_control["TAVILY_API_KEY"]
                 if not self.user_control["TAVILY_API_KEY"]:
                     st.warning("⚠️ Please enter your TAVILY_API_KEY, you can create one from https://tavily.com/ to proceed with the selected use case.")
